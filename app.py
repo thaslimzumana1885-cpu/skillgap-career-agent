@@ -15,41 +15,34 @@ KEY = os.getenv("LLM_API_KEY", "")
 MODEL = os.getenv("LLM_MODEL", "")
 app = Flask(__name__, static_folder="static")
 
-# Fallback role requirements: skill -> (weight, aliases)
-ROLES = {
-    "Data Analyst": {"SQL": (10, ["sql", "mysql"]), "Python": (9, ["python"]), "Excel": (7, ["excel"]),
-        "Data visualization": (9, ["tableau", "power bi", "matplotlib"]), "Statistics": (8, ["statistics", "probability"]),
-        "pandas": (8, ["pandas", "numpy"]), "Git": (4, ["git", "github"])},
-    "Full Stack Developer": {"JavaScript": (10, ["javascript", "typescript"]), "React": (9, ["react", "vue", "angular"]),
-        "HTML/CSS": (7, ["html", "css"]), "Node.js": (8, ["node", "express"]), "Databases": (8, ["sql", "mongodb", "postgres"]),
-        "REST APIs": (7, ["api", "rest"]), "Git": (6, ["git", "github"]), "Docker": (5, ["docker"])},
-    "Machine Learning Engineer": {"Python": (10, ["python"]), "Machine learning": (10, ["machine learning", "scikit", "sklearn"]),
-        "Deep learning": (8, ["pytorch", "tensorflow", "keras"]), "Statistics": (8, ["statistics", "linear algebra"]),
-        "pandas": (7, ["pandas", "numpy"]), "MLOps": (6, ["mlops", "docker", "mlflow"]), "NLP": (5, ["nlp", "transformers", "llm"])},
-    "Cloud / DevOps Engineer": {"Linux": (9, ["linux", "bash"]), "Cloud platform": (10, ["aws", "azure", "gcp"]),
-        "Docker": (9, ["docker"]), "Kubernetes": (8, ["kubernetes", "k8s"]), "CI/CD": (8, ["ci/cd", "jenkins", "github actions"]),
-        "Terraform": (7, ["terraform", "ansible"]), "Monitoring": (5, ["prometheus", "grafana"])},
-}
+# CAG: the role knowledge base (roles.json) is loaded once and placed in every prompt.
+# Format: role -> skill -> [weight, aliases, course, project]
+with open(os.path.join(os.path.dirname(__file__), "roles.json"), encoding="utf-8") as fh:
+    ROLES = json.load(fh)
+
+
+def role_knowledge(role):
+    lines = [f"- {s} (importance {w}/10) | course: {c} | project: {p}" for s, (w, al, c, p) in ROLES[role].items()]
+    return f"Industry requirements for {role}:\n" + "\n".join(lines)
 
 
 def local_analysis(role, text, projects, certs):
     req = ROLES.get(role) or next(iter(ROLES.values()))
     t, have, miss, got = text.lower(), [], [], 0
-    total = sum(w for w, _ in req.values())
-    for skill, (w, aliases) in req.items():
+    total = sum(v[0] for v in req.values())
+    for skill, (w, aliases, course, proj) in req.items():
         if any(re.search(r"(^|[^a-z])" + re.escape(a) + r"([^a-z]|$)", t) for a in aliases):
             have.append(skill); got += w
         else:
-            miss.append((w, skill))
+            miss.append((w, skill, course, proj))
     miss.sort(reverse=True)
     score = round(got / total * 80 + min(projects, 3) / 3 * 10 + min(certs, 2) / 2 * 10)
     return {
         "readiness_score": score, "summary": "Keyword-based analysis (AI unavailable).",
         "matched_skills": have,
-        "missing_skills": [{"skill": s, "priority": "high" if w >= 8 else "medium", "why": f"Core requirement for {role}."} for w, s in miss],
-        "learning_plan": [{"week": i + 1, "focus": s, "course": f"Search '{s} for beginners' on Coursera / YouTube / freeCodeCamp",
-                           "project": f"Build a small project that uses {s}"} for i, (w, s) in enumerate(miss[:6])],
-        "recommended_projects": [f"Portfolio project demonstrating {s}" for w, s in miss[:3]],
+        "missing_skills": [{"skill": s, "priority": "high" if w >= 8 else "medium", "why": f"Core requirement for {role}."} for w, s, c, p in miss],
+        "learning_plan": [{"week": i + 1, "focus": s, "course": c, "project": p} for i, (w, s, c, p) in enumerate(miss[:6])],
+        "recommended_projects": [p for w, s, c, p in miss[:3]],
         "source": "local"}
 
 
@@ -59,20 +52,22 @@ requirements for the target role. Reply with ONLY valid JSON (no markdown) in th
 "missing_skills":[{"skill":"...","priority":"high|medium|low","why":"..."}],
 "learning_plan":[{"week":1,"focus":"...","course":"specific course/resource","project":"hands-on task"}],
 "recommended_projects":["..."]}
-Plan should cover 6 weeks, ordered by priority. Be honest and specific."""
+Plan should cover 6 weeks, ordered by priority. Be honest and specific.
+Use the provided requirements list as your main reference. Prefer its courses and projects
+for the learning plan; you may add other well-known resources if needed."""
 
 
 def llm_analysis(role, profile):
     r = requests.post(f"{BASE}/v1/chat/completions",
         headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json"},
         json={"model": MODEL, "temperature": 0.3, "messages": [
-            {"role": "system", "content": PROMPT},
+            {"role": "system", "content": PROMPT + "\n\n" + role_knowledge(role)},
             {"role": "user", "content": f"Target role: {role}\n\nStudent profile:\n{profile}"}]},
         timeout=60)
     r.raise_for_status()
     content = r.json()["choices"][0]["message"]["content"]
     data = json.loads(re.search(r"\{.*\}", content, re.S).group(0))
-    data["source"] = "ai"
+    data["source"] = "ai"; data["knowledge"] = "CAG: roles.json"
     return data
 
 
@@ -99,10 +94,11 @@ def analyze():
     n_proj = len([l for l in projects.splitlines() if l.strip()])
     n_cert = len([l for l in certs.splitlines() if l.strip()])
     if BASE and KEY and MODEL:
-        try:
-            return jsonify(llm_analysis(role, profile))
-        except Exception as e:
-            app.logger.warning("LLM failed, using fallback: %s", e)
+        for attempt in range(3):
+            try:
+                return jsonify(llm_analysis(role, profile))
+            except Exception as e:
+                app.logger.warning("LLM attempt %s failed: %s", attempt + 1, e)
     return jsonify(local_analysis(role, text + projects + certs, n_proj, n_cert))
 
 

@@ -1,0 +1,313 @@
+{
+ "Data Analyst": {
+  "SQL": [
+   10,
+   [
+    "sql",
+    "mysql",
+    "postgres"
+   ],
+   "SQL for Data Analysis (Mode / Khan Academy)",
+   "Analyse a public sales database with joins and window functions"
+  ],
+  "Python": [
+   9,
+   [
+    "python"
+   ],
+   "Python for Everybody (Coursera)",
+   "Automate a data-cleaning pipeline"
+  ],
+  "Excel": [
+   7,
+   [
+    "excel",
+    "spreadsheet"
+   ],
+   "Excel for Analysts (Microsoft Learn)",
+   "Build a pivot-table financial report"
+  ],
+  "Data visualization": [
+   9,
+   [
+    "tableau",
+    "power bi",
+    "matplotlib",
+    "visualization"
+   ],
+   "Power BI or Tableau Public tutorials",
+   "Publish an interactive KPI dashboard"
+  ],
+  "Statistics": [
+   8,
+   [
+    "statistics",
+    "hypothesis",
+    "probability"
+   ],
+   "Statistics Fundamentals (Khan Academy)",
+   "Run an A/B test analysis on sample data"
+  ],
+  "pandas": [
+   8,
+   [
+    "pandas",
+    "numpy"
+   ],
+   "Data Analysis with pandas (Kaggle Learn)",
+   "Exploratory analysis of a Kaggle dataset"
+  ],
+  "Storytelling": [
+   5,
+   [
+    "storytelling",
+    "presentation",
+    "reporting"
+   ],
+   "Storytelling with Data",
+   "Present insights as a 5-slide executive brief"
+  ],
+  "Git": [
+   4,
+   [
+    "git",
+    "github"
+   ],
+   "Git & GitHub Crash Course",
+   "Host your notebooks on GitHub"
+  ]
+ },
+ "Full Stack Developer": {
+  "JavaScript": [
+   10,
+   [
+    "javascript",
+    "typescript"
+   ],
+   "The Odin Project: JavaScript",
+   "Build an interactive to-do app"
+  ],
+  "React": [
+   9,
+   [
+    "react",
+    "vue",
+    "angular"
+   ],
+   "React official tutorial (react.dev)",
+   "Build a multi-page app with routing"
+  ],
+  "HTML/CSS": [
+   7,
+   [
+    "html",
+    "css",
+    "tailwind"
+   ],
+   "freeCodeCamp Responsive Web Design",
+   "Clone a landing page responsively"
+  ],
+  "Node.js": [
+   8,
+   [
+    "node",
+    "express"
+   ],
+   "Node.js & Express (freeCodeCamp)",
+   "Create a REST API with authentication"
+  ],
+  "Databases": [
+   8,
+   [
+    "sql",
+    "mongodb",
+    "postgres",
+    "mysql",
+    "database"
+   ],
+   "SQL & MongoDB basics (MongoDB University)",
+   "Add persistent storage to your API"
+  ],
+  "REST APIs": [
+   7,
+   [
+    "api",
+    "rest",
+    "graphql"
+   ],
+   "REST API design (Postman Learning Center)",
+   "Document an API with Swagger"
+  ],
+  "Git": [
+   6,
+   [
+    "git",
+    "github"
+   ],
+   "Git & GitHub Crash Course",
+   "Contribute to an open-source repo"
+  ],
+  "Testing & deployment": [
+   6,
+   [
+    "jest",
+    "testing",
+    "docker",
+    "deploy",
+    "vercel"
+   ],
+   "Testing with Jest + deploying on Render/Vercel",
+   "Deploy a full-stack app"
+  ]
+ },
+ "Machine Learning Engineer": {
+  "Python": [
+   10,
+   [
+    "python"
+   ],
+   "Python for Everybody (Coursera)",
+   "Write reusable ML utilities"
+  ],
+  "Machine learning": [
+   10,
+   [
+    "machine learning",
+    "scikit",
+    "sklearn",
+    "regression",
+    "classification"
+   ],
+   "Machine Learning Specialization (Andrew Ng)",
+   "Predict house prices end to end"
+  ],
+  "Deep learning": [
+   8,
+   [
+    "deep learning",
+    "pytorch",
+    "tensorflow",
+    "keras",
+    "neural"
+   ],
+   "Deep Learning with PyTorch (fast.ai)",
+   "Train an image classifier"
+  ],
+  "Math & statistics": [
+   8,
+   [
+    "linear algebra",
+    "statistics",
+    "calculus",
+    "probability"
+   ],
+   "Mathematics for ML (Imperial College)",
+   "Implement gradient descent from scratch"
+  ],
+  "Data handling": [
+   7,
+   [
+    "pandas",
+    "numpy",
+    "sql"
+   ],
+   "Pandas & NumPy (Kaggle Learn)",
+   "Feature engineering on a Kaggle dataset"
+  ],
+  "MLOps": [
+   6,
+   [
+    "mlops",
+    "docker",
+    "mlflow",
+    "deploy"
+   ],
+   "MLOps Zoomcamp (DataTalks.Club)",
+   "Serve a model with FastAPI + Docker"
+  ],
+  "NLP": [
+   5,
+   [
+    "nlp",
+    "transformers",
+    "hugging face",
+    "llm"
+   ],
+   "Hugging Face NLP Course",
+   "Build a sentiment-analysis app"
+  ]
+ },
+ "Cloud / DevOps Engineer": {
+  "Linux": [
+   9,
+   [
+    "linux",
+    "bash",
+    "shell"
+   ],
+   "Linux Foundation intro to Linux",
+   "Automate server setup with a shell script"
+  ],
+  "Cloud platform": [
+   10,
+   [
+    "aws",
+    "azure",
+    "gcp",
+    "cloud"
+   ],
+   "AWS Cloud Practitioner / Azure AZ-900",
+   "Host a static site + API on the cloud"
+  ],
+  "Docker": [
+   9,
+   [
+    "docker",
+    "container"
+   ],
+   "Docker docs: Get Started",
+   "Containerise a multi-service app"
+  ],
+  "Kubernetes": [
+   8,
+   [
+    "kubernetes",
+    "k8s",
+    "helm"
+   ],
+   "Kubernetes Basics (kubernetes.io)",
+   "Deploy an app to a local cluster"
+  ],
+  "CI/CD": [
+   8,
+   [
+    "ci/cd",
+    "jenkins",
+    "github actions",
+    "gitlab"
+   ],
+   "GitHub Actions docs",
+   "Pipeline: test, build, deploy on push"
+  ],
+  "Terraform": [
+   7,
+   [
+    "terraform",
+    "ansible",
+    "cloudformation"
+   ],
+   "Terraform Getting Started (HashiCorp)",
+   "Provision a VM with Terraform"
+  ],
+  "Monitoring": [
+   5,
+   [
+    "prometheus",
+    "grafana",
+    "monitoring"
+   ],
+   "Prometheus & Grafana intro",
+   "Create a service health dashboard"
+  ]
+ }
+}

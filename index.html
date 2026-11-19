@@ -1,54 +1,150 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Skill Gap & Career Readiness Agent</title>
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--ink:#1a2036;--mut:#5c6580;--line:#dfe3ee;--acc:#3b4cca;--ok:#13795b;--bad:#b42318;--okbg:#e3f6ee;--badbg:#fdeceb}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1320;--card:#191e30;--ink:#e8eaf5;--mut:#9aa2c0;--line:#2b3250;--acc:#8c9bff;--ok:#5fd3a6;--bad:#ff8f86;--okbg:#14352b;--badbg:#3a1d1d}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
-main{max-width:900px;margin:auto;padding:24px 16px 48px}h1{margin:0 0 4px}.sub{color:var(--mut);margin:0 0 20px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1b2033;--mut:#5d6580;--line:#e1e4ee;--acc:#4f46e5;--ok:#13795b;--bad:#b42318;--okbg:#e3f6ee;--badbg:#fdeceb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10131f;--card:#1a1f31;--ink:#e8eaf5;--mut:#9aa2c0;--line:#2c3350;--acc:#8b84ff;--ok:#5fd3a6;--bad:#ff8f86;--okbg:#14352b;--badbg:#3a1d1d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10131f;--card:#1a1f31;--ink:#e8eaf5;--mut:#9aa2c0;--line:#2c3350;--acc:#8b84ff;--ok:#5fd3a6;--bad:#ff8f86;--okbg:#14352b;--badbg:#3a1d1d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px}
+p.sub{color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+h2{font-size:1.05rem;margin:0 0 10px}
 label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
-textarea{min-height:80px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
-button{margin-top:16px;background:var(--acc);color:#fff;border:0;border-radius:8px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:4px 11px;border-radius:99px;font-size:.85rem;font-weight:600}
-.ok{background:var(--okbg);color:var(--ok)}.bad{background:var(--badbg);color:var(--bad)}
-.big{font-size:3rem;font-weight:800;line-height:1}.week{border-left:3px solid var(--acc);padding:2px 0 2px 14px;margin:12px 0}
-.hide{display:none}small{color:var(--mut)}
-</style></head><body><main>
-<h1>Skill Gap & Career Readiness Agent</h1>
-<p class="sub">Add your resume details and target role to see your gaps and a learning plan.</p>
+textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:84px;resize:vertical}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+button{margin-top:16px;background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--acc);border:1px solid var(--line);margin-left:8px}
+.score{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;font-weight:700}
+.ring span{background:var(--card);width:84px;height:84px;border-radius:50%;display:grid;place-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:4px 11px;border-radius:99px;font-size:.85rem;font-weight:600}
+.chip.ok{background:var(--okbg);color:var(--ok)}
+.chip.bad{background:var(--badbg);color:var(--bad)}
+.week{border-left:3px solid var(--acc);padding:4px 0 4px 14px;margin:12px 0}
+.week b{display:block}
+.week small{color:var(--mut)}
+.hide{display:none}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--acc)}
+</style>
+</head>
+<body>
+<main>
+<h1>🎯 Skill Gap & Career Readiness Agent</h1>
+<p class="sub">Paste your resume details, pick a target role, and get a readiness score, your skill gaps, and a personalised learning plan.</p>
+
 <div class="card">
-<label for="role">Target role</label><select id="role"></select>
-<label for="resume">Resume (PDF, optional)</label><input type="file" id="resume" accept=".pdf">
-<label for="skills">Technical skills</label><textarea id="skills" placeholder="Python, SQL, Excel, Git"></textarea>
-<div class="grid"><div><label for="projects">Projects (one per line)</label><textarea id="projects"></textarea></div>
-<div><label for="certs">Certifications (one per line)</label><textarea id="certs"></textarea></div></div>
-<button id="go">Analyse my readiness</button></div>
-<div id="status" class="card hide"></div>
+  <label for="role">Target role</label>
+  <select id="role"></select>
+  <label for="skills">Resume / technical skills</label>
+  <textarea id="skills" placeholder="e.g. Python, SQL, Excel, pandas, Git, HTML, CSS, JavaScript"></textarea>
+  <div class="grid">
+    <div><label for="projects">Projects (one per line)</label>
+    <textarea id="projects" placeholder="Sales dashboard using Python and SQL&#10;Portfolio website with HTML and CSS"></textarea></div>
+    <div><label for="certs">Certifications (one per line)</label>
+    <textarea id="certs" placeholder="Google Data Analytics Certificate"></textarea></div>
+  </div>
+  <button id="go">Analyse my readiness</button><button class="ghost" id="demo">Load sample</button>
+</div>
+
 <div id="out" class="hide">
-<div class="card"><div class="big" id="score"></div><p id="summary"></p><small id="src"></small></div>
-<div class="card"><h2>Skills you have</h2><div class="chips" id="have"></div></div>
-<div class="card"><h2>Skill gaps</h2><div id="miss"></div></div>
-<div class="card"><h2>Learning plan</h2><div id="plan"></div></div>
-<div class="card"><h2>Recommended projects</h2><ul id="proj"></ul></div></div>
+  <div class="card"><h2>Career readiness</h2>
+    <div class="score"><div class="ring" id="ring"><span id="pct"></span></div>
+    <div id="verdict" style="flex:1;min-width:220px"></div></div>
+    <div id="bars" style="margin-top:14px"></div></div>
+  <div class="card"><h2>Skills you already have</h2><div class="chips" id="have"></div></div>
+  <div class="card"><h2>Missing skills (highest demand first)</h2><div class="chips" id="miss"></div></div>
+  <div class="card"><h2>Personalised learning plan</h2><div id="plan"></div></div>
+</div>
+</main>
+
 <script>
-const $=i=>document.getElementById(i),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-fetch("/api/roles").then(r=>r.json()).then(l=>l.forEach(r=>$("role").add(new Option(r,r))));
-$("go").onclick=async()=>{
- const fd=new FormData();["role","skills","projects","certs"].forEach(k=>fd.append(k,$(k).value));
- if($("resume").files[0])fd.append("resume",$("resume").files[0]);
- $("status").textContent="Analysing…";$("status").classList.remove("hide");$("go").disabled=true;
- try{const d=await (await fetch("/api/analyze",{method:"POST",body:fd})).json();
-  $("score").textContent=d.readiness_score+"%";$("summary").textContent=d.summary||"";
-  $("src").textContent=d.source==="ai"?"Analysed by AI agent":"Analysed with local keyword rules";
-  $("have").innerHTML=(d.matched_skills||[]).map(s=>`<span class="chip ok">${esc(s)}</span>`).join("")||"<small>None found yet.</small>";
-  $("miss").innerHTML=(d.missing_skills||[]).map(m=>`<p><span class="chip bad">${esc(m.skill)}</span> <small>${esc(m.priority)} priority</small><br>${esc(m.why)}</p>`).join("")||"No gaps found.";
-  $("plan").innerHTML=(d.learning_plan||[]).map(w=>`<div class="week"><b>Week ${esc(w.week)}: ${esc(w.focus)}</b><br>Course: ${esc(w.course)}<br>Project: ${esc(w.project)}</div>`).join("");
-  $("proj").innerHTML=(d.recommended_projects||[]).map(p=>`<li>${esc(p)}</li>`).join("");
-  $("status").classList.add("hide");$("out").classList.remove("hide");
- }catch(e){$("status").textContent="Something went wrong. Check the server terminal for details."}
- $("go").disabled=false;};
-</script></main></body></html>
+// [skill, weight, aliases, learn, project]
+const ROLES={
+"Data Analyst":[
+["SQL",10,["sql","mysql","postgres"],"SQL for Data Analysis (Mode / Khan Academy)","Analyse a public sales database with joins and window functions"],
+["Python",9,["python"],"Python for Everybody (Coursera)","Automate a data-cleaning pipeline"],
+["Excel",7,["excel","spreadsheet"],"Excel for Analysts (Microsoft Learn)","Build a pivot-table financial report"],
+["Data visualization",9,["tableau","power bi","powerbi","matplotlib","visualization"],"Power BI or Tableau Public tutorials","Publish an interactive KPI dashboard"],
+["Statistics",8,["statistics","hypothesis","probability"],"Statistics Fundamentals (Khan Academy)","Run an A/B test analysis on sample data"],
+["pandas",8,["pandas","numpy"],"Data Analysis with pandas (Kaggle Learn)","Exploratory analysis of a Kaggle dataset"],
+["Storytelling",5,["storytelling","presentation","reporting"],"Storytelling with Data (book/course)","Present insights as a 5-slide executive brief"],
+["Git",4,["git","github"],"Git & GitHub Crash Course","Host your analysis notebooks on GitHub"]],
+"Full Stack Developer":[
+["JavaScript",10,["javascript","js","typescript"],"The Odin Project: JavaScript","Build an interactive to-do app"],
+["React",9,["react","vue","angular"],"React official tutorial (react.dev)","Build a multi-page app with routing"],
+["HTML/CSS",7,["html","css","tailwind"],"freeCodeCamp Responsive Web Design","Clone a landing page responsively"],
+["Node.js",8,["node","express"],"Node.js & Express (freeCodeCamp)","Create a REST API with authentication"],
+["Databases",8,["sql","mongodb","postgres","mysql","database"],"SQL & MongoDB basics (W3Schools / MongoDB University)","Add persistent storage to your API"],
+["Git",6,["git","github"],"Git & GitHub Crash Course","Contribute to an open-source repo"],
+["REST APIs",7,["api","rest","graphql"],"REST API design (Postman Learning Center)","Document an API with Swagger"],
+["Testing & deployment",6,["jest","testing","docker","deploy","vercel"],"Testing with Jest + deploy on Vercel/Render","Deploy a full-stack app with CI"]],
+"Machine Learning Engineer":[
+["Python",10,["python"],"Python for Everybody (Coursera)","Write reusable ML utilities"],
+["Machine learning",10,["machine learning","scikit","sklearn","regression","classification"],"Machine Learning Specialization (Andrew Ng)","Predict house prices end to end"],
+["Deep learning",8,["deep learning","pytorch","tensorflow","keras","neural"],"Deep Learning with PyTorch (fast.ai)","Train an image classifier"],
+["Math & statistics",8,["linear algebra","statistics","calculus","probability"],"Mathematics for ML (Imperial College)","Implement gradient descent from scratch"],
+["Data handling",7,["pandas","numpy","sql"],"Pandas & NumPy (Kaggle Learn)","Feature engineering on a Kaggle dataset"],
+["MLOps",6,["mlops","docker","mlflow","deploy"],"MLOps Zoomcamp (DataTalks.Club)","Serve a model with FastAPI + Docker"],
+["NLP",5,["nlp","transformers","hugging face","llm"],"Hugging Face NLP Course","Build a sentiment-analysis app"],
+["Git",4,["git","github"],"Git & GitHub Crash Course","Track experiments in a repo"]],
+"Cloud / DevOps Engineer":[
+["Linux",9,["linux","bash","shell"],"Linux Foundation intro to Linux","Automate server setup with a shell script"],
+["Cloud platform",10,["aws","azure","gcp","cloud"],"AWS Cloud Practitioner / Azure AZ-900","Host a static site + API on the cloud"],
+["Docker",9,["docker","container"],"Docker Mastery (Docker docs)","Containerise a multi-service app"],
+["Kubernetes",8,["kubernetes","k8s","helm"],"Kubernetes Basics (kubernetes.io)","Deploy an app to a local cluster (kind/minikube)"],
+["CI/CD",8,["ci/cd","jenkins","github actions","gitlab"],"GitHub Actions docs","Pipeline: test, build, deploy on push"],
+["Infrastructure as code",7,["terraform","ansible","cloudformation"],"Terraform Getting Started (HashiCorp)","Provision a VPC and VM with Terraform"],
+["Scripting",6,["python","bash","scripting"],"Python for Automation","Write a log-monitoring script"],
+["Monitoring",5,["prometheus","grafana","monitoring"],"Prometheus & Grafana intro","Create a service health dashboard"]]
+};
+const $=id=>document.getElementById(id);
+const roleSel=$("role");Object.keys(ROLES).forEach(r=>roleSel.add(new Option(r,r)));
+const lines=t=>t.split(/\n/).map(s=>s.trim()).filter(Boolean);
+
+$("demo").onclick=()=>{roleSel.value="Data Analyst";
+$("skills").value="Python, SQL, Excel, pandas, Git, HTML, CSS";
+$("projects").value="Sales dashboard using Python and SQL\nPortfolio website with HTML and CSS";
+$("certs").value="Google Data Analytics Certificate";run();};
+$("go").onclick=run;
+
+function run(){
+ const role=roleSel.value,list=ROLES[role];
+ const text=($("skills").value+"\n"+$("projects").value+"\n"+$("certs").value).toLowerCase();
+ const projects=lines($("projects").value).length,certs=lines($("certs").value).length;
+ const have=[],miss=[];let got=0,total=0;
+ list.forEach(s=>{total+=s[1];
+  const hit=s[2].some(a=>new RegExp("(^|[^a-z])"+a.replace(/[.*+?^${}()|[\]\\\/]/g,"\\$&")+"([^a-z]|$)").test(text));
+  (hit?have:miss).push(s);if(hit)got+=s[1];});
+ const cov=got/total*100,pj=Math.min(projects,3)/3*100,ct=Math.min(certs,2)/2*100;
+ const score=Math.round(cov*0.8+pj*0.1+ct*0.1);
+ $("out").classList.remove("hide");
+ $("pct").textContent=score+"%";
+ $("ring").style.background=`conic-gradient(var(--acc) ${score*3.6}deg,var(--line) 0)`;
+ const lvl=score>=75?"Industry-ready":score>=50?"Almost there":score>=25?"Building foundations":"Just getting started";
+ $("verdict").innerHTML=`<b>${lvl}</b> for <b>${role}</b>.<br><span style="color:var(--mut)">You cover ${have.length} of ${list.length} core skills. Closing the top gaps below gives the biggest score boost.</span>`;
+ const bar=(n,v)=>`<div style="margin-bottom:8px"><small>${n} · ${Math.round(v)}%</small><div class="bar"><i style="width:${v}%"></i></div></div>`;
+ $("bars").innerHTML=bar("Skill coverage (80% of score)",cov)+bar("Projects, aim for 3 (10%)",pj)+bar("Certifications, aim for 2 (10%)",ct);
+ $("have").innerHTML=have.map(s=>`<span class="chip ok">${s[0]}</span>`).join("")||"<small>No matching skills found yet.</small>";
+ miss.sort((a,b)=>b[1]-a[1]);
+ $("miss").innerHTML=miss.map(s=>`<span class="chip bad">${s[0]}</span>`).join("")||"<small>No gaps. Nice work!</small>";
+ let plan=miss.slice(0,6).map((s,i)=>`<div class="week"><b>Week ${i+1}: ${s[0]}</b>📘 ${s[3]}<br>🛠️ Project: ${s[4]}</div>`).join("");
+ if(projects<3)plan+=`<div class="week"><b>Ongoing: portfolio</b>Add ${3-projects} more project(s) that showcase the skills above.</div>`;
+ if(certs<2)plan+=`<div class="week"><b>Ongoing: certification</b>Earn a recognised ${role.toLowerCase()} certificate to validate your skills.</div>`;
+ $("plan").innerHTML=plan||"<small>You’re in great shape. Start applying and polish interview skills.</small>";
+ $("out").scrollIntoView({behavior:"smooth"});
+}
+</script>
+</body>
+</html>
