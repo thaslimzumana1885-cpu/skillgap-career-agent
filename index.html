@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill Gap & Career Readiness Agent</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#1a2036;--mut:#5c6580;--line:#dfe3ee;--acc:#3b4cca;--ok:#13795b;--bad:#b42318;--okbg:#e3f6ee;--badbg:#fdeceb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1320;--card:#191e30;--ink:#e8eaf5;--mut:#9aa2c0;--line:#2b3250;--acc:#8c9bff;--ok:#5fd3a6;--bad:#ff8f86;--okbg:#14352b;--badbg:#3a1d1d}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+main{max-width:900px;margin:auto;padding:24px 16px 48px}h1{margin:0 0 4px}.sub{color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:80px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+button{margin-top:16px;background:var(--acc);color:#fff;border:0;border-radius:8px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:4px 11px;border-radius:99px;font-size:.85rem;font-weight:600}
+.ok{background:var(--okbg);color:var(--ok)}.bad{background:var(--badbg);color:var(--bad)}
+.big{font-size:3rem;font-weight:800;line-height:1}.week{border-left:3px solid var(--acc);padding:2px 0 2px 14px;margin:12px 0}
+.hide{display:none}small{color:var(--mut)}
+</style></head><body><main>
+<h1>Skill Gap & Career Readiness Agent</h1>
+<p class="sub">Add your resume details and target role to see your gaps and a learning plan.</p>
+<div class="card">
+<label for="role">Target role</label><select id="role"></select>
+<label for="resume">Resume (PDF, optional)</label><input type="file" id="resume" accept=".pdf">
+<label for="skills">Technical skills</label><textarea id="skills" placeholder="Python, SQL, Excel, Git"></textarea>
+<div class="grid"><div><label for="projects">Projects (one per line)</label><textarea id="projects"></textarea></div>
+<div><label for="certs">Certifications (one per line)</label><textarea id="certs"></textarea></div></div>
+<button id="go">Analyse my readiness</button></div>
+<div id="status" class="card hide"></div>
+<div id="out" class="hide">
+<div class="card"><div class="big" id="score"></div><p id="summary"></p><small id="src"></small></div>
+<div class="card"><h2>Skills you have</h2><div class="chips" id="have"></div></div>
+<div class="card"><h2>Skill gaps</h2><div id="miss"></div></div>
+<div class="card"><h2>Learning plan</h2><div id="plan"></div></div>
+<div class="card"><h2>Recommended projects</h2><ul id="proj"></ul></div></div>
+<script>
+const $=i=>document.getElementById(i),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+fetch("/api/roles").then(r=>r.json()).then(l=>l.forEach(r=>$("role").add(new Option(r,r))));
+$("go").onclick=async()=>{
+ const fd=new FormData();["role","skills","projects","certs"].forEach(k=>fd.append(k,$(k).value));
+ if($("resume").files[0])fd.append("resume",$("resume").files[0]);
+ $("status").textContent="Analysing…";$("status").classList.remove("hide");$("go").disabled=true;
+ try{const d=await (await fetch("/api/analyze",{method:"POST",body:fd})).json();
+  $("score").textContent=d.readiness_score+"%";$("summary").textContent=d.summary||"";
+  $("src").textContent=d.source==="ai"?"Analysed by AI agent":"Analysed with local keyword rules";
+  $("have").innerHTML=(d.matched_skills||[]).map(s=>`<span class="chip ok">${esc(s)}</span>`).join("")||"<small>None found yet.</small>";
+  $("miss").innerHTML=(d.missing_skills||[]).map(m=>`<p><span class="chip bad">${esc(m.skill)}</span> <small>${esc(m.priority)} priority</small><br>${esc(m.why)}</p>`).join("")||"No gaps found.";
+  $("plan").innerHTML=(d.learning_plan||[]).map(w=>`<div class="week"><b>Week ${esc(w.week)}: ${esc(w.focus)}</b><br>Course: ${esc(w.course)}<br>Project: ${esc(w.project)}</div>`).join("");
+  $("proj").innerHTML=(d.recommended_projects||[]).map(p=>`<li>${esc(p)}</li>`).join("");
+  $("status").classList.add("hide");$("out").classList.remove("hide");
+ }catch(e){$("status").textContent="Something went wrong. Check the server terminal for details."}
+ $("go").disabled=false;};
+</script></main></body></html>
